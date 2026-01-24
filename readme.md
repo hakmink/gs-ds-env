@@ -122,7 +122,7 @@ $WORKING_DIR/
 ```bash
 export WORKING_DIR="/home/ec2-user/SageMaker/.myenv"
 
-$WORKING_DIR/gs-ds-env/bin/gs-env-create-kernel.sh \
+/home/ec2-user/SageMaker/gs-ds-env/bin/gs-env-create-kernel.sh \
   <theme> <python_version>
 ```
 

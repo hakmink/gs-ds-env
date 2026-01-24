@@ -17,7 +17,7 @@ set -euo pipefail
 # - torch_variant: cu121 | cpu (default: cu121)
 
 WORKING_DIR="${WORKING_DIR:-/home/ec2-user/SageMaker/.myenv}"
-WORKING_ROOT="${WORKING_DIR}/gs-ds-env"
+WORKING_ROOT="/home/ec2-user/SageMaker/gs-ds-env"
 
 THEME="${1:?theme required}"
 PYVER="${2:?python version required (e.g., 3.12)}"
@@ -102,6 +102,3 @@ echo "     Venv dir     : ${VENV_DIR}"
 echo "     Manifest     : ${MANIFEST}"
 echo
 echo "Next: In JupyterLab -> Kernel -> Change Kernel -> ${KERNEL_NAME}"
-EOF
-
-chmod +x "${WORKING_DIR}/gs-ds-env/bin/gs-env-create-kernel.sh"
