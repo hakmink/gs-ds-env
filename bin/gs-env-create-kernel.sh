@@ -12,21 +12,21 @@ set -euo pipefail
 #
 # Notes:
 # - kernel name: <theme>_<pyver_no_dot>  e.g., tsai_312
-# - venv path : $WORKING_ROOT/<theme>/kernel/.venv
-# - default requirements: $WORKING_ROOT/<theme>/kernel/requirements.txt
+# - venv path : $WORKING_DIR/<theme>/kernel/.venv
+# - default requirements: $WORKING_DIR/<theme>/kernel/requirements.txt
 # - torch_variant: cu121 | cpu (default: cu121)
 
 WORKING_DIR="${WORKING_DIR:-/home/ec2-user/SageMaker/.myenv}"
-WORKING_ROOT="/home/ec2-user/SageMaker/gs-ds-env"
+SOURCE_ROOT="/home/ec2-user/SageMaker/gs-ds-env"
 
 THEME="${1:?theme required}"
 PYVER="${2:?python version required (e.g., 3.12)}"
-REQ_PATH="${3:-${WORKING_ROOT}/${THEME}/kernel/requirements.txt}"
+REQ_PATH="${3:-${SOURCE_ROOT}/${THEME}/kernel/requirements.txt}"
 TORCH_VARIANT="${4:-cu121}"
 
 PYVER_TAG="$(echo "${PYVER}" | tr -d '.')"
 KERNEL_NAME="${THEME}_${PYVER_TAG}"
-THEME_DIR="${WORKING_ROOT}/${THEME}"
+THEME_DIR="${WORKING_DIR}/${THEME}"
 KERNEL_DIR="${THEME_DIR}/kernel"
 VENV_DIR="${KERNEL_DIR}/.venv"
 
