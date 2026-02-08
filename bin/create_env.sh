@@ -90,6 +90,7 @@ echo ""
 echo "📦 [2/5] Conda 환경 생성 중: $ENV_NAME (Python $PYTHON_VERSION)"
 
 conda create -n "$ENV_NAME" python="$PYTHON_VERSION" -y --quiet
+conda config --append envs_dirs "$WORKING_DIR/miniconda/envs"
 
 echo "✅ Conda 환경 생성 완료"
 

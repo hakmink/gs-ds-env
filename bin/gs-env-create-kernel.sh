@@ -60,16 +60,16 @@ source "${VENV_DIR}/bin/activate"
 uv pip install -U pip setuptools wheel
 uv pip install ipykernel
 
-# --- Install torch (optional but typically needed) ---
-if [[ "${TORCH_VARIANT}" == "cu121" ]]; then
-  echo "[INFO] Installing torch (cu121 index)..."
-  uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-elif [[ "${TORCH_VARIANT}" == "cpu" ]]; then
-  echo "[INFO] Installing torch (cpu)..."
-  uv pip install torch torchvision torchaudio
-else
-  echo "[WARN] Unknown torch_variant='${TORCH_VARIANT}'. Skipping torch install."
-fi
+# # --- Install torch (optional but typically needed) ---
+# if [[ "${TORCH_VARIANT}" == "cu121" ]]; then
+#   echo "[INFO] Installing torch (cu121 index)..."
+#   uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+# elif [[ "${TORCH_VARIANT}" == "cpu" ]]; then
+#   echo "[INFO] Installing torch (cpu)..."
+#   uv pip install torch torchvision torchaudio
+# else
+#   echo "[WARN] Unknown torch_variant='${TORCH_VARIANT}'. Skipping torch install."
+# fi
 
 # --- Install requirements if present ---
 if [[ -n "${REQ_PATH}" && -f "${REQ_PATH}" ]]; then
