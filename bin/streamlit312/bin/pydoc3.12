@@ -1,5 +1,0 @@
-#!/home/ec2-user/SageMaker/gs-ds-env/bin/streamlit312/bin/python3.12
-
-import pydoc
-if __name__ == '__main__':
-    pydoc.cli()
