@@ -32,6 +32,7 @@ if [ $# -ne 3 ]; then
 fi
 
 ENV_NAME="$1"
+CONDA_ENV_NAME="$1"
 REQUIREMENTS="$2"
 PYTHON_VERSION="$3"
 
@@ -56,10 +57,10 @@ echo "============================================"
 mkdir -p "${WORKING_DIR}"
 
 # ============================================================
-# [1/5] Miniconda 설치
+# [1/6] Miniconda 설치
 # ============================================================
 echo ""
-echo "📦 [1/5] Miniconda 설치 중..."
+echo "📦 [1/6] Miniconda 설치 중..."
 
 wget https://repo.anaconda.com/miniconda/Miniconda3-py312_25.3.1-1-Linux-x86_64.sh \
     -O "$WORKING_DIR/miniconda.sh" --no-check-certificate
@@ -84,57 +85,82 @@ if conda env list | grep -q "^$ENV_NAME "; then
 fi
 
 # ============================================================
-# [2/5] Conda 환경 생성
+# [2/6] Conda 환경 생성
 # ============================================================
 echo ""
-echo "📦 [2/5] Conda 환경 생성 중: $ENV_NAME (Python $PYTHON_VERSION)"
+echo "📦 [2/6] Conda 환경 생성 중: $ENV_NAME (Python $PYTHON_VERSION)"
 
 conda create -n "$ENV_NAME" python="$PYTHON_VERSION" -y --quiet
-conda config --append envs_dirs "$WORKING_DIR/miniconda/envs"
 
 echo "✅ Conda 환경 생성 완료"
 
 # ============================================================
-# [3/5] 환경 활성화
+# [3/6] 환경 활성화
 # ============================================================
 echo ""
-echo "🔄 [3/5] 환경 활성화 중..."
+echo "🔄 [3/6] 환경 활성화 중..."
 
-source $WORKING_DIR/miniconda/etc/profile.d/conda.sh
-conda init bash
-conda activate "$ENV_NAME"
+conda activate "$WORKING_DIR/miniconda/envs/$ENV_NAME"
 
 echo "✅ 환경 활성화 완료 ($(python --version))"
 
 # ============================================================
-# [4/5] uv로 requirements.txt 패키지 설치
+# [4/6] uv로 requirements.txt 패키지 설치
 # ============================================================
 echo ""
-echo "📥 [4/5] uv로 패키지 설치 중..."
+echo "📥 [4/6] uv로 패키지 설치 중..."
 
 if ! command -v uv &> /dev/null; then
     echo "   uv 설치 중..."
     pip install uv --quiet
 fi
 
-uv pip install -r "$REQUIREMENTS"
+uv pip install -r "$REQUIREMENTS" --only-binary :all: 
+uv pip install sagemaker sagemaker-experiments sagemaker-training
 
 echo "✅ 패키지 설치 완료"
 
 # ============================================================
-# [5/5] ipykernel로 Jupyter 커널 등록
+# [5/6] ipykernel로 Jupyter 커널 등록
 # ============================================================
 echo ""
-echo "🔧 [5/5] Jupyter 커널 등록 중..."
+echo '######################################'
+echo "ENV Name: $ENV_NAME"
+echo '######################################'
+echo 'start init, activate, ipykernel install'
+
+source "$WORKING_DIR/miniconda/etc/profile.d/conda.sh"
+conda init bash
+conda activate "$WORKING_DIR/miniconda/envs/$ENV_NAME"
+conda info --envs
 
 uv pip install ipykernel
 
-python -m ipykernel install \
-    --user \
-    --name "$ENV_NAME" \
-    --display-name "$ENV_NAME (Python $PYTHON_VERSION)"
+# python -m ipykernel install --user --name="$CONDA_ENV_NAME"
+python -m ipykernel install --user --name="conda_$CONDA_ENV_NAME"
 
-echo "✅ 커널 등록 완료"
+echo '######################################'
+echo 'Done'
+
+# ============================================================
+# [6/6] envs_dirs 등록 및 커널 확인
+# ============================================================
+echo ""
+echo "🔧 [6/6] envs_dirs 등록 및 커널 확인..."
+
+conda config --add envs_dirs "$WORKING_DIR/miniconda/envs"
+conda env list
+jupyter kernelspec list
+
+echo '######################################'
+echo 'start cleanup'
+
+conda deactivate
+source "${WORKING_DIR}/miniconda/bin/deactivate"
+conda activate "$ENV_NAME"
+
+echo '######################################'
+echo 'Cleanup Done'
 
 # ============================================================
 # 완료
@@ -143,7 +169,7 @@ echo ""
 echo "============================================"
 echo " 🎉 설정 완료!"
 echo ""
-echo " 커널 이름 : $ENV_NAME"
+echo " 커널 이름 : $ENV_NAME / conda_$ENV_NAME"
 echo " 환경 경로 : $WORKING_DIR/miniconda/envs/$ENV_NAME"
 echo ""
 echo " 수동 활성화:"
