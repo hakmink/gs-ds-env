@@ -1,0 +1,31 @@
+{
+  "name": "libgcc-ng",
+  "version": "15.2.0",
+  "build": "h69a702a_17",
+  "build_number": 17,
+  "channel": "https://conda.anaconda.org/conda-forge/linux-64",
+  "subdir": "linux-64",
+  "fn": "libgcc-ng-15.2.0-h69a702a_17.conda",
+  "md5": "1478bfa85224a65ab096d69ffd2af1e5",
+  "url": "https://conda.anaconda.org/conda-forge/linux-64/libgcc-ng-15.2.0-h69a702a_17.conda",
+  "sha256": "bdfe50501e4a2d904a5eae65a7ae26e2b7a29b473ab084ad55d96080b966502e",
+  "depends": [
+    "libgcc 15.2.0 he0feb66_17"
+  ],
+  "constrains": [],
+  "license": "GPL-3.0-only WITH GCC-exception-3.1",
+  "timestamp": 1770252546000,
+  "size": 27541,
+  "requested_spec": "None",
+  "package_tarball_full_path": "/home/ec2-user/anaconda3/pkgs/libgcc-ng-15.2.0-h69a702a_17.conda",
+  "extracted_package_dir": "/home/ec2-user/anaconda3/pkgs/libgcc-ng-15.2.0-h69a702a_17",
+  "files": [],
+  "paths_data": {
+    "paths_version": 1,
+    "paths": []
+  },
+  "link": {
+    "source": "/home/ec2-user/anaconda3/pkgs/libgcc-ng-15.2.0-h69a702a_17",
+    "type": 1
+  }
+}
