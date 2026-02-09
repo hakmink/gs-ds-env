@@ -1,0 +1,12 @@
+sagemaker
+sagemaker-experiments
+sagemaker-training
+sagemaker-core
+pytz 
+mlflow 
+jinja2
+wordcloud 
+awswrangler  
+pyarrow 
+sqlalchemy 
+psycopg2-binary

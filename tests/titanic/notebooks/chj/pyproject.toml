@@ -1,0 +1,11 @@
+[project]
+name = "titanic"
+version = "0.1.0"
+description = "Titanic survival prediction with SageMaker Training + Custom ECR Image"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",
+    "scikit-learn",
+    "sagemaker>=2.200,<3",
+]
