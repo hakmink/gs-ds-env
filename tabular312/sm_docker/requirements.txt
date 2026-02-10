@@ -5,11 +5,6 @@ sagemaker_training==4.9.0
 pytz 
 mlflow 
 jinja2
-wordcloud 
-awswrangler  
-pyarrow 
-sqlalchemy 
-psycopg2-binary
 papermill
 xgboost
 seaborn
