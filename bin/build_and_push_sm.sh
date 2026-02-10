@@ -40,8 +40,8 @@ aws ecr get-login-password --region ${REGION} \
 cp delete_untagged_images.py gen_dockerfile.py "../$ENV_NAME/sm_docker/"
 
 cd "../$ENV_NAME/sm_docker"
-
-python gen_dockerfile.py
+echo "python gen_dockerfile.py --env ${ENV_NAME} --version ${VERSION}"
+python gen_dockerfile.py --env ${ENV_NAME} --version ${VERSION}
 
 docker build -f Dockerfile -t $REPO_NAME .
 

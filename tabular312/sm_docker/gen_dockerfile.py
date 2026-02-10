@@ -1,9 +1,10 @@
+import os
+import argparse
 import boto3
 from jinja2 import Environment, FileSystemLoader
-import os
 
 
-def get_info():
+def get_info(env_name, version):
     # STS 클라이언트 생성
     sts_client = boto3.client('sts')
 
@@ -24,6 +25,8 @@ def get_info():
     data = {
         "account_id": target_account_id,
         "region_name": target_region,
+        "env_name": env_name,
+        "version": version
     }
     return data
 
@@ -59,9 +62,28 @@ def apply_task_definition(data):
     
     
 if __name__ == '__main__':
+    # ArgumentParser 설정
+    parser = argparse.ArgumentParser(description='Docker 및 ECS 설정 파일 생성')
+    parser.add_argument(
+        '--env',
+        dest='env_name',
+        required=True,
+        help='conda 가상환경'
+    )
+    parser.add_argument(
+        '--version',
+        dest='version',
+        default='1.0',
+        required=True,
+        help='image version 정보'
+    )    
+    # 인자 파싱
+    args = parser.parse_args()
+    
     # tempalte 에 전달할 data
-    data = get_info()
+    data = get_info(args.env_name, args.version)
     # Dockerfile 생성
+    print(data)
     apply_dockerfile(data)
     # task-definition
     # apply_task_definition(data)

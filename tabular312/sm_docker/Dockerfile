@@ -15,11 +15,12 @@ COPY run_pm.py run_pm_utils.py conf.py /opt/ml/code/
 COPY requirements.txt /opt/ml/
     
 # requirements 설치
-RUN ${PIP} install --no-deps --only-binary :all: -r /requirements.txt \
-    || ${PIP} install --no-deps --prefer-binary -r /requirements.txt \
-    || ${PIP} install --no-deps -r /requirements.txt || true \
-    && rm /requirements.txt
+RUN ${PIP} install --no-deps --only-binary :all: -r /opt/ml/requirements.txt \
+    || ${PIP} install --no-deps --prefer-binary -r /opt/ml/requirements.txt \
+    || ${PIP} install --no-deps -r /opt/ml/requirements.txt || true \
+    && rm /opt/ml/requirements.txt
 # RUN pip install -U pytz mlflow jinja2 sagemaker sagemaker-experiments sagemaker-training sagemaker-core wordcloud awswrangler  pyarrow sqlalchemy psycopg2-binary
+# RUN pip install -U -r /opt/ml/requirements.txt
 
 # ipykernel을 설치하고 커널 등록
 RUN pip install ipykernel && \
