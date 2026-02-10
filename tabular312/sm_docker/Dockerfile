@@ -20,7 +20,7 @@ RUN pip install --no-deps --only-binary :all: -r /opt/ml/requirements.txt \
     || pip install --no-deps --prefer-binary -r /opt/ml/requirements.txt \
     || pip install --no-deps -r /opt/ml/requirements.txt || true 
 # RUN pip install -U pytz mlflow jinja2 sagemaker sagemaker-experiments sagemaker-training sagemaker-core wordcloud awswrangler  pyarrow sqlalchemy psycopg2-binary
-# RUN pip install -U -r /opt/ml/requirements.txt
+RUN pip install -U --no-deps -r /opt/ml/requirements.txt
 
 # ipykernel을 설치하고 커널 등록
 RUN pip install ipykernel && \
