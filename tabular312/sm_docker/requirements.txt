@@ -1,10 +1,4 @@
-sagemaker==2.235.2
-sagemaker-core==1.0.76
-sagemaker-experiments==0.1.45
-sagemaker_training==4.9.0
 pytz 
 mlflow 
 jinja2
 papermill
-xgboost
-seaborn
