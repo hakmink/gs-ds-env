@@ -3,10 +3,17 @@ FROM 155954279556.dkr.ecr.us-east-1.amazonaws.com/gs-automl-base-containers/tabu
 
 RUN apt-get update && apt-get install -y libbz2-dev graphviz
 
+# uv 설치
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.cargo/bin:$PATH"
+
 RUN mkdir -p /opt/ml/code/
 
 # 작업 디렉토리 설정
 WORKDIR /opt/ml/
+
+# PIP 환경 변수를 uv pip으로 재정의
+ENV PIP="uv pip"
 
 # 필요한 파일 복사
 COPY run_pm.py run_pm_utils.py conf.py /opt/ml/code/

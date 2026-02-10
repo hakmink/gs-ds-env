@@ -57,6 +57,13 @@ RUN apt-get update && \
     fc-cache -fv && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# uv 설치
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.cargo/bin:$PATH"
+
+# PIP 환경 변수를 uv pip으로 재정의
+ENV PIP="pip"
+
 # Upgrade pip and install Python packages
 RUN ${PIP} --no-cache-dir install --upgrade pip && \
     ${PIP} install --upgrade setuptools
@@ -64,6 +71,9 @@ RUN ${PIP} --no-cache-dir install --upgrade pip && \
 # Copy and install dependencies
 WORKDIR /
 COPY requirements.txt /requirements.txt
+
+# PIP 환경 변수를 uv pip으로 재정의
+ENV PIP="uv pip"
 # RUN ${PIP} install --no-deps -r /requirements.txt && rm /requirements.txt
 RUN ${PIP} install --no-deps --only-binary :all: -r /requirements.txt \
     || ${PIP} install --no-deps --prefer-binary -r /requirements.txt \
