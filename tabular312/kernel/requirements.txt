@@ -36,3 +36,4 @@ xgboost
 mlflow
 jinja2
 pytz
+sagemaker==2.*

@@ -5,7 +5,7 @@ import os
 
 
 log_table_name = 'automl-logs'
-kernel_name = "conda_tabular312_langchain"
+kernel_name = "conda_tabular312"
 
 
 def get_info():
