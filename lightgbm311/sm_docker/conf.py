@@ -24,7 +24,7 @@ def get_info():
     # 현재 세션의 리전 정보 가져오기
     target_region = session.region_name
     if target_region is None:
-        target_region = 'us-east-1'
+        target_region = 'ap-northeast-2'
 
     print(f"AWS Region: {target_region}")
     

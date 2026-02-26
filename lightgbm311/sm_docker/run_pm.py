@@ -12,6 +12,7 @@ from botocore.exceptions import ClientError
 import papermill as pm
 from papermill.exceptions import PapermillExecutionError
 import pprint
+import sys
 
 import run_pm_utils as utils
 import conf
@@ -49,8 +50,6 @@ def upload_file_to_s3(local_path: str, bucket: str, prefix: str) -> str:
 
 def run_papermill(input_nb, output_dir):
     os.chdir(output_dir)
-    print(input_nb)
-    print(output_dir))
     output_nb = input_nb.replace('.ipynb', '_output.ipynb')
     try:
         pm.execute_notebook(
@@ -58,12 +57,10 @@ def run_papermill(input_nb, output_dir):
             output_nb,
             parameters=dict(),
             kernel_name=conf.kernel_name,
-            report_mode=True,
-            stdout_file=sys.stdout,  # 노트북 출력을 stdout으로
-            stderr_file=sys.stderr,
+            report_mode=True
         )
-        bucket_name = "retail-mlops-edu-2026-hjsong"
-        s3_prefix = "edu-202602-staff/titanic/output"
+        bucket_name = "retail-mlops-edu-2026"
+        s3_prefix = "edu-2w/hjsong/output"
         s3_uri = upload_file_to_s3(output_nb, bucket_name, s3_prefix)
         print(f"Uploaded to: {s3_uri}")
     except PapermillExecutionError as e:
@@ -76,12 +73,10 @@ def run_papermill(input_nb, output_dir):
 # ----------------------------
 if __name__ == "__main__":
     try:
-        CODE_DIR = os.environ.get("SM_MODULE_DIR", os.getcwd())
         output_dir = "."
         artifacts_dir = "artifacts"
         os.makedirs(artifacts_dir, exist_ok=True)
-        # input_nb = 'train_titanic_lightgbm.ipynb'
-        input_nb = os.path.join(CODE_DIR, 'train_titanic_lightgbm.ipynb')
+        input_nb = 'train_titanic_lightgbm.ipynb'
         run_papermill(input_nb, output_dir)
     except Exception as e:
         print(e)
