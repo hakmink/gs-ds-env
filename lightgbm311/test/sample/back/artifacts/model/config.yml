@@ -1,0 +1,65 @@
+WANDB:
+  project: gs-automl-forecasting
+  secret_name: aws-credential
+  secret_key: gs-wandb-yoloseankim1
+  region_name: us-east-1
+  infra: AWS
+  job_type: train-model
+  algorithm_name: lightgbm
+  wandb_name: wine_quality_analysis
+  model_suffix: base
+  tags:
+  - lightgbm-base
+  - wine_quality
+  - base
+SEED: 2024
+SPLIT:
+  type: random
+  # type: manual
+  # manual_split_colname: data_type 
+  # type: chronological
+  # chronological_split_colname: datetime
+  valid_size: 0.1
+  test_size: 0.1
+FEATURES:
+  index_col: 
+    col_name: alcohol
+    col_dtype: float
+  target_col: quality
+  feature_cols:
+  - fixed_acidity
+  - volatile_acidity
+  - citric_acid
+  - residual_sugar
+  - chlorides
+  - free_sulfur_dioxide
+  - total_sulfur_dioxide
+  - density
+  - pH
+  - sulphates
+  - alcohol
+HYPERPARAMS:
+  objective: regression
+  boosting: gbdt
+  max_depth: 15
+  num_leaves: 100
+  # max_depth: -1
+  learning_rate: 0.05
+  feature_fraction: 0.9
+  bagging_fraction: 0.8
+  bagging_freq: 5
+  verbosity: 1
+  num_iterations: 200
+  metric:
+  - rmse
+  - l2
+  - l1
+  - huber
+BOOSTING:
+  num_boost_round: 1000
+  early_stopping_rounds: 50
+EBM_BOOSTING:
+  # max_rounds: 25000 is default
+  # early_stopping_rounds: 100 is default
+  max_rounds: 1000 
+  early_stopping_rounds: 50 

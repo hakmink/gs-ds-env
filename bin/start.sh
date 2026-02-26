@@ -10,8 +10,8 @@ locale
 # git
 git config --global credential.helper 'cache --timeout=3600'
 git config --global credential.helper store
-git config --global user.name "Sean"
-git config --global user.email hakmink@gmail.com
+git config --global user.name "hyunju-song"
+git config --global user.email hun3780@gmail.com
 
 cp ~/SageMaker/.git-credentials ~/.
 
