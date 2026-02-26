@@ -1,5 +1,5 @@
 # Dockerfile
-FROM 155954279556.dkr.ecr.us-east-1.amazonaws.com/gs-automl-base-containers/lightgbm311:hjsong-1.0
+FROM 155954279556.dkr.ecr.us-east-1.amazonaws.com/gs-automl-base-containers/lightgbm311:1.0
 
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1

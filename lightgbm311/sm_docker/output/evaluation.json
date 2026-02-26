@@ -1,6 +1,0 @@
-{
-  "model_path": "/home/ec2-user/SageMaker/gs-ds-env/lightgbm311/sm_docker/model/titanic_model.joblib.joblib",
-  "metrics": {
-    "accuracy": 0.776536312849162
-  }
-}
