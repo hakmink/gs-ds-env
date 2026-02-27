@@ -1,5 +1,5 @@
 # Dockerfile
-FROM {{account_id}}.dkr.ecr.{{region_name}}.amazonaws.com/gs-automl-base-containers/{{env_name}}:{{version}}
+FROM {{account_id}}.dkr.ecr.{{region_name}}.amazonaws.com/gs-automl-base-containers/{{env_name}}:1.0
 
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
