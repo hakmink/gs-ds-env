@@ -116,7 +116,8 @@ if ! command -v uv &> /dev/null; then
 fi
 
 uv pip install -r "$REQUIREMENTS" --only-binary :all: 
-uv pip install sagemaker sagemaker-experiments sagemaker-training
+uv pip install --no-deps sagemaker==2.235.2 sagemaker-core==1.0.76 sagemaker-experiments==0.1.45 sagemaker_training==4.9.0 
+uv pip install sagemaker_training==4.9.0 rich smdebug_rulesconfig schema retrying
 
 echo "✅ 패키지 설치 완료"
 

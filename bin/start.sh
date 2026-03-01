@@ -18,24 +18,29 @@ cp ~/SageMaker/.git-credentials ~/.
 # yum
 sudo yum install -y htop tree telnet
 
-
 ##################################################
-# # alias
-echo "alias l='ls -al'" >> ~/.bashrc
-echo "alias st='conda activate streamlit314'" >> ~/.bashrc
-echo "alias 312='conda activate tabular312'" >> ~/.bashrc
-echo "alias 311='conda activate lightgbm311'" >> ~/.bashrc
-# echo "alias 312='conda activate tabular312_langchain'" >> ~/.bashrc
-# source ~/.bashrc
-
-# # python kernel
+# swap size
 cd ~/SageMaker/gs-ds-env/bin/
 ./increase_swap_size.sh
-./start_env.sh streamlit314
-./start_env.sh tabular312
-./start_env.sh lightgbm311
-# clear
 
-# # streamlit run
-# cp ~/SageMaker/run.sh ~/run.sh
-# clear
+##################################################
+# 환경 시작
+echo "alias l='ls -al'" >> ~/.bashrc
+
+# alias 등록
+declare -A aliases=(
+    ["st"]="streamlit314"
+    ["312"]="tabular312"
+    ["311"]="lightgbm311"
+    ["bo"]="boilerplate312"
+)
+
+for alias_name in "${!aliases[@]}"; do
+    echo "alias ${alias_name}='conda activate ${aliases[$alias_name]}'" >> ~/.bashrc
+done
+
+
+for alias_name in "${!aliases[@]}"; do
+    ./start_env.sh "${aliases[$alias_name]}"
+done
+

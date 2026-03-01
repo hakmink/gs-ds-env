@@ -1,0 +1,17 @@
+boto3
+botocore
+ipykernel
+joblib
+numpy
+pandas
+papermill
+python-dotenv
+pyyaml
+mlflow
+jinja2
+pytz
+#sagemaker 는 uv 로 설치하기 때문에, 여기에 넣을 필요 없음.
+#sagemaker==2.235.2
+#sagemaker-core==1.0.76
+#sagemaker-experiments==0.1.45
+#sagemaker_training==4.9.0
