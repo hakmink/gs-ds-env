@@ -70,13 +70,10 @@ RUN ${PIP} --no-cache-dir install --upgrade pip && \
 WORKDIR /
 COPY requirements.txt /requirements.txt
 
-# RUN ${PIP} install --no-deps -r /requirements.txt && rm /requirements.txt
-RUN ${PIP} install --no-deps --only-binary :all: -r /requirements.txt \
-    || ${PIP} install --no-deps --prefer-binary -r /requirements.txt \
-    || ${PIP} install --no-deps -r /requirements.txt  \
-    || ${PIP} install -U -r /requirements.txt 
-
-# RUN ${PIP} install --no-deps -r /requirements.txt 
+RUN ${PIP} install --no-cache-dir --no-deps --only-binary :all: -r /requirements.txt \
+    || ${PIP} install --no-cache-dir --no-deps --prefer-binary -r /requirements.txt \
+    || ${PIP} install --no-cache-dir --no-deps -r /requirements.txt \
+    || ${PIP} install -r /requirements.txt 
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \

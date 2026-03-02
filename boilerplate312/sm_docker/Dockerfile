@@ -19,9 +19,14 @@ COPY run_pm.py run_pm_utils.py conf.py /opt/ml/code/
 COPY requirements.txt /opt/ml/
     
 # requirements 설치
-RUN pip install --no-cache-dir --no-deps --only-binary :all: -r /opt/ml/requirements.txt \
-    || pip install --no-cache-dir --no-deps --prefer-binary -r /opt/ml/requirements.txt \
-    || pip install --no-cache-dir --no-deps -r /opt/ml/requirements.txt 
+ENV PIP="pip"
+# RUN pip install --no-cache-dir --no-deps --only-binary :all: -r /opt/ml/requirements.txt \
+#     || pip install --no-cache-dir --no-deps --prefer-binary -r /opt/ml/requirements.txt \
+#     || pip install --no-cache-dir --no-deps -r /opt/ml/requirements.txt 
+RUN ${PIP} install --no-cache-dir --no-deps --only-binary :all: -r /opt/ml/requirements.txt \
+    || ${PIP} install --no-cache-dir --no-deps --prefer-binary -r /opt/ml/requirements.txt \
+    || ${PIP} install --no-cache-dir --no-deps -r /opt/ml/requirements.txt \
+    || ${PIP} install -r /opt/ml/requirements.txt 
 # RUN pip install -U pytz mlflow jinja2 sagemaker sagemaker-experiments sagemaker-training sagemaker-core wordcloud awswrangler  pyarrow sqlalchemy psycopg2-binary
 # RUN pip install -U -r /opt/ml/requirements.txt
 
