@@ -22,7 +22,7 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     show_help
     exit 0
 fi
-if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+if [ $# -lt 1 ] || [ $# -gt 3 ]; then
     echo "Error: env_name은 필수입니다." >&2
     show_help
     exit 1
