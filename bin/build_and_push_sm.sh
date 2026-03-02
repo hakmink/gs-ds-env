@@ -10,11 +10,12 @@ show_help() {
     echo
     echo "Arguments:"
     echo "  env_name           Conda environment name"
-    echo "  version            version (default: 1.0)"
+    echo "  base_version       base version (default: 1.0)"
+    echo "  my_version         sm version (default: 1.0)"
     echo
     echo "Example:"
     echo "  $0 streamlit312"
-    echo "  $0 streamlit312 2.0"
+    echo "  $0 streamlit312 2.0 sean-v1.0"
 }
 # 인자 검증
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
@@ -27,7 +28,8 @@ if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     exit 1
 fi
 ENV_NAME="$1"
-VERSION="${2:-1.0}"
+BASE_VERSION="${2:-1.0}"
+MY_VERSION="${3:-1.0}"
 
 # gse-dxlab account id
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
@@ -41,18 +43,18 @@ cp delete_untagged_images.py gen_dockerfile.py "../$ENV_NAME/sm_docker/"
 
 cd "../$ENV_NAME/sm_docker"
 
-echo "python gen_dockerfile.py --env ${ENV_NAME} --version ${VERSION}"
-python gen_dockerfile.py --env ${ENV_NAME} --version ${VERSION}
+echo "python gen_dockerfile.py --env ${ENV_NAME} --base_version ${BASE_VERSION} --my_version ${MY_VERSION}"
+python gen_dockerfile.py --env ${ENV_NAME} --base_version ${BASE_VERSION} --my_version ${MY_VERSION}
 
 docker build -f Dockerfile -t $REPO_NAME .
 
-docker tag $REPO_NAME $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$VERSION
+docker tag $REPO_NAME $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$MY_VERSION
 
 $(aws ecr get-login --no-include-email --registry-ids $ACCOUNT_ID)
 
 aws ecr describe-repositories --repository-names $REPO_NAME || aws ecr create-repository --repository-name $REPO_NAME
 
-docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$VERSION
+docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$MY_VERSION
 
 sleep 10
 python delete_untagged_images.py --repository_name ${REPO_NAME} --region ${REGION}
