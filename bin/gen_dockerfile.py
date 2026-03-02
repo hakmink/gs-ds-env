@@ -4,7 +4,7 @@ import boto3
 from jinja2 import Environment, FileSystemLoader
 
 
-def get_info(env_name, version):
+def get_info(env_name, base_version, my_version):
     # STS 클라이언트 생성
     sts_client = boto3.client('sts')
 
@@ -26,7 +26,8 @@ def get_info(env_name, version):
         "account_id": target_account_id,
         "region_name": target_region,
         "env_name": env_name,
-        "version": version
+        "base_version": base_version,
+        "my_version": my_version
     }
     return data
 
@@ -71,17 +72,24 @@ if __name__ == '__main__':
         help='conda 가상환경'
     )
     parser.add_argument(
-        '--version',
-        dest='version',
+        '--base_version',
+        dest='base_version',
         default='1.0',
         required=True,
-        help='image version 정보'
+        help='image base version 정보'
     )    
+    parser.add_argument(
+        '--my_version',
+        dest='my_version',
+        default='1.0',
+        required=True,
+        help='image my version for sm training 정보'
+    ) 
     # 인자 파싱
     args = parser.parse_args()
     
     # tempalte 에 전달할 data
-    data = get_info(args.env_name, args.version)
+    data = get_info(args.env_name, args.base_version, args.my_version)
     # Dockerfile 생성
     print(data)
     apply_dockerfile(data)
