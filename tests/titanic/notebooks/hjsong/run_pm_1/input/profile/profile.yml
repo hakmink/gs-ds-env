@@ -1,0 +1,10 @@
+aws:
+  region: us-east-1
+profile_name: default
+python:
+  dependencies:
+  - lightgbm==4.1.0
+  - pandas==2.0.3
+  - scikit-learn==1.3.0
+  version: '3.10'
+version: '1.0'

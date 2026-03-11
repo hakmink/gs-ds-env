@@ -1,0 +1,104 @@
+# ============================================================
+# model.yml - 모델 학습 설정
+#
+# 변경 주기  : 매 실험마다
+# 관리 주체  : 모델 과학자
+# S3 위치    : s3://gs-retail-awesome-config-ap-northeast-2/
+#               projects/gs25-sales-forecast/experiments/baseline-v1/model.yml
+#
+# ※ 실험 식별자는 meta.yml / 인프라 설정은 env.yml 에서 관리
+# ============================================================
+
+# ── 알고리즘 ─────────────────────────────────────────────────
+algorithm:
+  name:   lightgbm
+  task:   regression
+  suffix: base             # 저장될 모델 파일 suffix (model_<suffix>.pkl)
+
+# ── 하이퍼파라미터 ───────────────────────────────────────────
+hyperparameters:
+  objective:        regression
+  boosting:         gbdt
+  max_depth:        15
+  learning_rate:    0.05
+  num_leaves:       150
+  feature_fraction: 0.9
+  bagging_fraction: 0.8
+  bagging_freq:     5
+  verbosity:        1
+  num_iterations:   500
+  # min_data_in_leaf: 10
+  metric:
+    - rmse
+    - l2
+    - l1
+    - huber
+
+# ── 데이터 기간 / 분할 ───────────────────────────────────────
+data:
+  seed:              202311
+  train_from:        '2021-01-01'
+  train_to:          '2023-11-07'
+  test_from:         '2023-09-27'
+  test_to:           '2023-10-04'
+  train_valid_split: 0.1        # 학습셋 중 검증 비율
+  equip_id:          1          # 대상 설비 ID
+
+# ── 피처 정의 ────────────────────────────────────────────────
+features:
+  index_col:  datetime
+  target_col: sales
+  base_col:
+    # 가격 / 비용
+    - ra_cc_apply
+    - gen_price_normal
+    - gen_price_const
+    - lng_for_group_anyang
+    - coal_weighted_avg
+    # 기상
+    - temp
+    - max_temp
+    - humidity
+    - discomfort_index
+    # 달력
+    - weekend
+    - hour
+    - work_time
+    - holiday
+    - holiday_before
+    - holiday_after
+    - weekday
+    - working_day
+    - working_day_before
+    - working_day_after
+    - season
+    # Lag 피처
+    - tmp_1hr_ago
+    - tmp_1wk_ago
+    - tmp_2wk_ago
+    - hm_1hr_ago
+    - hm_1wk_ago
+    - hm_2wk_ago
+    - ws_1hr_ago
+    - ws_1wk_ago
+    - ws_2wk_ago
+    - discomfort_index_1hr_ago
+    - discomfort_index_1wk_ago
+    - discomfort_index_2wk_ago
+
+# ── 후처리 ───────────────────────────────────────────────────
+post_processing:
+  n_days:
+    weekday: 14
+    weekend: 28
+  agg_col: hour
+
+# ── 리포트 ───────────────────────────────────────────────────
+report:
+  type: model_training_summary
+  include_sections:
+    - executive_summary
+    - data_overview
+    - model_performance
+    - feature_importance
+    - recommendations

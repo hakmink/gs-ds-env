@@ -1,0 +1,21 @@
+feature_importance:
+  day_of_week: 0.25
+  is_holiday: 0.2
+  precipitation: 0.12
+  promotion_flag: 0.15
+  store_id: 0.1
+  temperature: 0.18
+metrics:
+  test:
+    mae: 0.1198
+    r2: 0.8856
+    rmse: 0.1523
+  train:
+    mae: 0.0987
+    r2: 0.9123
+    rmse: 0.1234
+  validation:
+    mae: 0.1123
+    r2: 0.8901
+    rmse: 0.1456
+version: '1.0'
