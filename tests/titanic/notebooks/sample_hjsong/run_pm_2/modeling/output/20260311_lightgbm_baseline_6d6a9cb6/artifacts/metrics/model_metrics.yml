@@ -1,0 +1,95 @@
+run_id: 20260311_lightgbm_baseline_6d6a9cb6
+model_name: passenger-survival-classifier
+algorithm: lightgbm
+task: binary_classification
+evaluated_at: '2026-03-11T05:06:04.830545'
+train_metrics:
+  accuracy: 0.9185
+  precision: 0.9317
+  recall: 0.8498
+  f1_score: 0.8889
+  auc_roc: 0.9779
+  log_loss: 0.213
+  samples: 712
+valid_metrics:
+  accuracy: 0.7989
+  precision: 0.7895
+  recall: 0.6522
+  f1_score: 0.7143
+  auc_roc: 0.831
+  log_loss: 0.508
+  samples: 179
+confusion_matrix:
+  true_negative: 98
+  false_positive: 12
+  false_negative: 24
+  true_positive: 45
+  specificity: !!python/object/apply:numpy._core.multiarray.scalar
+  - &id001 !!python/object/apply:numpy.dtype
+    args:
+    - f8
+    - false
+    - true
+    state: !!python/tuple
+    - 3
+    - <
+    - null
+    - null
+    - null
+    - -1
+    - -1
+    - 0
+  - !!binary |
+    bjSAt0CC7D8=
+  sensitivity: !!python/object/apply:numpy._core.multiarray.scalar
+  - *id001
+  - !!binary |
+    O3DOiNLe5D8=
+feature_importance:
+- feature: Sex
+  importance: 0.291
+  rank: 1
+- feature: Age
+  importance: 0.1889
+  rank: 2
+- feature: FarePerPerson
+  importance: 0.1788
+  rank: 3
+- feature: Fare
+  importance: 0.168
+  rank: 4
+- feature: Pclass
+  importance: 0.0764
+  rank: 5
+- feature: FamilySize
+  importance: 0.0344
+  rank: 6
+- feature: Embarked_S
+  importance: 0.0238
+  rank: 7
+- feature: Parch
+  importance: 0.011
+  rank: 8
+- feature: Embarked_C
+  importance: 0.0105
+  rank: 9
+- feature: SibSp
+  importance: 0.0101
+  rank: 10
+training_history:
+  best_iteration: 0
+  total_iterations: 200
+  final_train_auc: !!python/object/apply:numpy._core.multiarray.scalar
+  - *id001
+  - !!binary |
+    0ETY8PRK7z8=
+  final_valid_auc: !!python/object/apply:numpy._core.multiarray.scalar
+  - *id001
+  - !!binary |
+    ZDvfT42X6j8=
+model_complexity:
+  num_trees: 200
+  max_depth: 6
+  num_leaves: 31
+  total_features: 12
+  model_size_mb: 0.33
