@@ -1,8 +1,0 @@
-created_at: '2026-03-03T13:39:11.191322'
-created_by: ec2-user
-environment: dev
-execution:
-  instance_count: 1
-  instance_type: ml.m5.xlarge
-project: titanic
-version: '1.0'
