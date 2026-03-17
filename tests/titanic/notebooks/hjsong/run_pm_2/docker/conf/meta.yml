@@ -8,9 +8,9 @@
 # ============================================================
 
 # ── 실험 식별자 ──────────────────────────────────────────────
-user_id:    sean
+user_id:    notfound_hjsong
 project:    titanic-survival-prediction
-experiment: baseline-v1
+experiment: tuned-v1
 model:      passenger-survival-classifier
 version:    v1.0
 

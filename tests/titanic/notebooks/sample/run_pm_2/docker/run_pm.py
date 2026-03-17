@@ -10,7 +10,7 @@ Usage:
     python run_pm.py --conf-s3-path s3://bucket/path/to/conf/
 
 Example:
-    python run_pm.py --conf-s3-path s3://gs-retail-awesome-conf-us-east-1/dev/sean/titanic-survival-prediction/baseline-v1/ --dry-run
+    python run_pm.py --conf-s3-path s3://gs-retail-awesome-conf-us-east-1/dev/sample/titanic-survival-prediction/baseline-v1/ --dry-run
 """
 
 import os
@@ -203,13 +203,14 @@ class S3Helper:
 class PipelineRunner:
     """ML Pipeline Runner"""
     
-    def __init__(self, conf_s3_path: str, work_dir: Path = None):
+    def __init__(self, conf_s3_path, work_dir=None, notebook_path=None):
         self.conf_s3_path = conf_s3_path.rstrip('/')
         self.work_dir = work_dir or Path.cwd() 
+        self.notebook_path = Path(notebook_path) if notebook_path else None
         
         # 로컬 디렉토리 구조
         self.conf_dir = self.work_dir / 'conf'
-        self.data_dir = self.work_dir 
+        self.data_dir = self.work_dir
         self.output_dir = self.work_dir / 'output'
         
         # 설정 및 S3 헬퍼 (나중에 초기화)
@@ -222,6 +223,8 @@ class PipelineRunner:
         # 다운로드된 실행 파일들
         self.notebooks = []
         self.scripts = []
+
+
     
     def setup_directories(self):
         """로컬 작업 디렉토리 생성"""
@@ -322,7 +325,7 @@ class PipelineRunner:
         version = self.meta_config['version']
         data_bucket = self.env_config['s3']['data_bucket']
         
-        data_s3_path = f"s3://{data_bucket}/{env}/{user_id}/{project}/{version}/"
+        data_s3_path = f"s3://{data_bucket}/{env}/{user_id}/{project}/{version}"
         
         logger.info(f"    Source: {data_s3_path}")
         
@@ -346,26 +349,98 @@ class PipelineRunner:
         return self.run_id
     
     def find_main_notebook(self) -> Path:
-        """실행할 메인 노트북 찾기"""
+        """실행할 메인 노트북 찾기 - 로컬 경로 및 S3 URI 모두 지원"""
+    
+        if self.notebook_path:
+            notebook_str = str(self.notebook_path)
+    
+            # S3 URI인 경우 → 로컬에 다운로드
+            if notebook_str.startswith("s3://") or notebook_str.startswith("s3:/"):
+                # s3:/ 로 들어온 경우 s3:// 로 정규화
+                if notebook_str.startswith("s3:/") and not notebook_str.startswith("s3://"):
+                    notebook_str = "s3://" + notebook_str[4:]
+    
+                filename = notebook_str.split("/")[-1]
+                local_path = self.work_dir / filename
+    
+                logger.info(f"    S3 notebook 감지 → 로컬 다운로드")
+                logger.info(f"    S3  : {notebook_str}")
+                logger.info(f"    Local: {local_path}")
+    
+                if not self.s3:
+                    # s3 헬퍼가 아직 초기화 안 됐을 경우 대비
+                    self.s3 = S3Helper(region=self.env_config.get("region") if self.env_config else None)
+    
+                if not self.s3.download_file(notebook_str, local_path):
+                    raise RuntimeError(f"S3 notebook 다운로드 실패: {notebook_str}")
+    
+                return local_path
+    
+            # 로컬 경로인 경우 → 기존 로직
+            if not self.notebook_path.exists():
+                raise RuntimeError(f"Notebook not found: {self.notebook_path}")
+    
+            logger.info(f"    Using external notebook: {self.notebook_path}")
+            return self.notebook_path
+    
+        # S3에서 다운로드된 노트북 사용
         if not self.notebooks:
             raise RuntimeError("No notebook found in conf S3 path")
-        
-        # 우선순위: model.yml에 지정된 노트북 > *_modeling.ipynb > 첫 번째 노트북
-        
+    
         # 1. model.yml에 notebook 지정되어 있는지 확인
-        if 'notebook' in self.model_config:
-            notebook_name = self.model_config['notebook']
+        if "notebook" in self.model_config:
+            notebook_name = self.model_config["notebook"]
             for nb in self.notebooks:
                 if nb.name == notebook_name:
                     return nb
-        
+    
         # 2. *_modeling.ipynb 패턴 찾기
         for nb in self.notebooks:
-            if 'modeling' in nb.name.lower():
+            if "modeling" in nb.name.lower():
                 return nb
-        
+    
         # 3. 첫 번째 노트북 사용
         return self.notebooks[0]
+
+    def _ensure_kernel(self, notebook_path: Path) -> Path:
+        """
+        노트북에 지정된 커널이 없으면 현재 python 실행환경으로 커널 등록
+        """
+        import json
+        import subprocess
+        from jupyter_client.kernelspec import KernelSpecManager
+    
+        # 현재 설치된 커널 목록
+        available_kernels = KernelSpecManager().find_kernel_specs()
+        logger.info(f"    Available kernels: {list(available_kernels.keys())}")
+    
+        # 노트북에 지정된 커널 확인
+        with open(notebook_path, 'r', encoding='utf-8') as f:
+            nb = json.load(f)
+    
+        kernel_name = nb.get('metadata', {}).get('kernelspec', {}).get('name', 'python3') or "conda_boilerplate312"
+        logger.info(f"    Notebook kernel: {kernel_name}")
+    
+        # 커널이 이미 있으면 그대로 사용
+        if kernel_name in available_kernels:
+            logger.info(f"    ✅ Kernel '{kernel_name}' found")
+            return notebook_path
+    
+    
+        result = subprocess.run(
+            [sys.executable, "-m", "ipykernel", "install", "--user", "--name", kernel_name, "--display-name", kernel_name],
+            capture_output=True,
+            text=True
+        )
+    
+        if result.returncode == 0:
+            logger.info(f"    ✅ Kernel '{kernel_name}' 등록 완료")
+            logger.info(f"       {result.stdout.strip()}")
+        else:
+            logger.error(f"    ❌ Kernel 등록 실패: {result.stderr.strip()}")
+            raise RuntimeError(f"Kernel '{kernel_name}' 등록 실패: {result.stderr.strip()}")
+    
+        return notebook_path
     
     def run_notebook(self):
         """Papermill로 노트북 실행"""
@@ -375,6 +450,8 @@ class PipelineRunner:
         notebook_path = self.find_main_notebook()
         logger.info(f"    Notebook: {notebook_path.name}")
         
+        # 커널 확인 및 등록
+        notebook_path = self._ensure_kernel(notebook_path)
         # 출력 노트북 경로
         output_notebook = self.output_dir / self.run_id / 'executed_notebook.ipynb'
         ensure_dir(output_notebook.parent)
@@ -390,7 +467,10 @@ class PipelineRunner:
             pm.execute_notebook(
                 str(notebook_path),
                 str(output_notebook),
-                parameters={},
+                parameters={
+                    "run_id": self.run_id,           # ← 추가
+                    "output_dir": str(self.output_dir / self.run_id),  # ← 추가
+                },
                 cwd=str(self.work_dir),
                 progress_bar=True,
                 log_output=True
@@ -512,10 +592,10 @@ def parse_args():
         epilog="""
 Examples:
   # 기본 실행
-  python run_pm.py --conf-s3-path s3://gs-retail-awesome-conf-us-east-1/dev/sean/titanic-survival-prediction/baseline-v1/
+  python run_pm.py --conf-s3-path s3://gs-retail-awesome-conf-us-east-1/dev/sample/titanic-survival-prediction/baseline-v1/
 
   # 작업 디렉토리 지정
-  python run_pm.py --conf-s3-path s3://bucket/path/ --work-dir /tmp/ml_run
+  python run_pm.py --conf-s3-path s3://bucket/path/ --work-dir /opt/ml/code/
 
   # Dry run (다운로드만)
   python run_pm.py --conf-s3-path s3://bucket/path/ --dry-run
@@ -525,8 +605,6 @@ S3 Conf 경로 구조:
     ├── env.yml              → conf/env.yml
     ├── meta.yml             → conf/meta.yml
     ├── model.yml            → conf/model.yml
-    ├── titanic_modeling.ipynb  → work_dir/titanic_modeling.ipynb
-    └── utils.py             → work_dir/utils.py (선택)
 
 S3 Data 경로 (env.yml 참조):
   s3://gs-retail-awesome-data-{region}/{env}/{user_id}/{project}/{version}/
@@ -550,6 +628,13 @@ S3 Model 경로 (Output):
         type=str,
         required=True,
         help='S3 path containing config files and notebooks'
+    )
+
+    parser.add_argument(
+        '--notebook-path',
+        type=str,
+        default=None,
+        help='외부 노트북 절대경로 (지정 시 S3 conf의 노트북 무시)'
     )
     
     parser.add_argument(
@@ -589,7 +674,8 @@ def main():
     # 파이프라인 실행
     runner = PipelineRunner(
         conf_s3_path=args.conf_s3_path,
-        work_dir=work_dir
+        work_dir=work_dir,
+        notebook_path=args.notebook_path,
     )
     
     if args.dry_run:

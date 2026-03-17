@@ -8,9 +8,9 @@
 # ============================================================
 
 # ── 실험 식별자 ──────────────────────────────────────────────
-user_id:    hjsong # (수정)사용자 아이디
+user_id:    sample # (수정)사용자 아이디
 project:    titanic-survival-prediction
-experiment: tuned-v1 #baseline-v1
+experiment: baseline-v1
 model:      passenger-survival-classifier
 version:    v1.0
 

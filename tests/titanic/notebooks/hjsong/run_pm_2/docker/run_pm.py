@@ -203,9 +203,10 @@ class S3Helper:
 class PipelineRunner:
     """ML Pipeline Runner"""
     
-    def __init__(self, conf_s3_path: str, work_dir: Path = None):
+    def __init__(self, conf_s3_path, work_dir=None, notebook_path=None):
         self.conf_s3_path = conf_s3_path.rstrip('/')
         self.work_dir = work_dir or Path.cwd() 
+        self.notebook_path = Path(notebook_path) if notebook_path else None
         
         # 로컬 디렉토리 구조
         self.conf_dir = self.work_dir / 'conf'
@@ -222,6 +223,8 @@ class PipelineRunner:
         # 다운로드된 실행 파일들
         self.notebooks = []
         self.scripts = []
+
+
     
     def setup_directories(self):
         """로컬 작업 디렉토리 생성"""
@@ -347,10 +350,17 @@ class PipelineRunner:
     
     def find_main_notebook(self) -> Path:
         """실행할 메인 노트북 찾기"""
+    
+        # 외부 경로 지정 시 우선 사용
+        if self.notebook_path:
+            if not self.notebook_path.exists():
+                raise RuntimeError(f"Notebook not found: {self.notebook_path}")
+            logger.info(f"    Using external notebook: {self.notebook_path}")
+            return self.notebook_path
+    
+        # S3에서 다운로드된 노트북 사용
         if not self.notebooks:
             raise RuntimeError("No notebook found in conf S3 path")
-        
-        # 우선순위: model.yml에 지정된 노트북 > *_modeling.ipynb > 첫 번째 노트북
         
         # 1. model.yml에 notebook 지정되어 있는지 확인
         if 'notebook' in self.model_config:
@@ -551,6 +561,13 @@ S3 Model 경로 (Output):
         required=True,
         help='S3 path containing config files and notebooks'
     )
+
+    parser.add_argument(
+        '--notebook-path',
+        type=str,
+        default=None,
+        help='외부 노트북 절대경로 (지정 시 S3 conf의 노트북 무시)'
+    )
     
     parser.add_argument(
         '--work-dir',
@@ -589,7 +606,8 @@ def main():
     # 파이프라인 실행
     runner = PipelineRunner(
         conf_s3_path=args.conf_s3_path,
-        work_dir=work_dir
+        work_dir=work_dir,
+        notebook_path=args.notebook_path,
     )
     
     if args.dry_run:

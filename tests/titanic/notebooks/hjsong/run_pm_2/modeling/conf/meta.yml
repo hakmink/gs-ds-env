@@ -8,9 +8,9 @@
 # ============================================================
 
 # ── 실험 식별자 ──────────────────────────────────────────────
-user_id:    hjsong #sean
+user_id:    sean
 project:    titanic-survival-prediction
-experiment: tuned_v1 #baseline-v1
+experiment: baseline-v1
 model:      passenger-survival-classifier
 version:    v1.0
 
@@ -22,7 +22,7 @@ version:    v1.0
 # ── MLFlow 트래킹 ─────────────────────────────────────────────
 mlflow:
   tracking_uri:    http://mlflow.gs-retail.internal:5000
-  experiment_name: titanic-survival-prediction/tuned-v1 # titanic-survival-prediction/baseline-v1
+  experiment_name: titanic-survival-prediction/baseline-v1
   run_name: ~
   secret_name: gs-retail-mlflow-sean
   region_name: us-east-1
