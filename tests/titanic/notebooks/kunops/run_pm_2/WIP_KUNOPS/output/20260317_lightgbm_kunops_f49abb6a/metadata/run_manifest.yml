@@ -1,0 +1,53 @@
+run_id: 20260317_lightgbm_kunops_f49abb6a
+run_name: kunops-v1-lightgbm-kunops
+created_at: '2026-03-17T15:07:21.304725'
+completed_at: '2026-03-17T15:07:21.700109'
+status: completed
+context:
+  env: dev
+  user_id: kunops
+  project: titanic-survival-prediction
+  experiment: kunops-v1
+  model: passenger-survival-classifier
+  algorithm: lightgbm
+  task: classification
+  version: v1.0
+s3_refs:
+  conf_path: s3://gs-retail-awesome-conf-us-west-1/dev/kunops/titanic-survival-prediction/kunops-v1/
+  data_path: s3://gs-retail-awesome-data-us-west-1/dev/kunops/titanic-survival-prediction/v1.0/
+  model_path: s3://gs-retail-awesome-model-us-west-1/dev/kunops/titanic-survival-prediction/kunops-v1/20260317_lightgbm_kunops_f49abb6a/
+config_hashes:
+  env_yml: sha256:e07ede24d12d9cff...
+  meta_yml: sha256:ad6f9f513dd76251...
+  model_yml: sha256:d9e2b8b6248c88e5...
+runtime:
+  platform: local
+  python_version: '3.12'
+  framework: lightgbm==4.6.0
+summary:
+  duration_seconds: 0
+  train_samples: 712
+  valid_samples: 179
+  feature_count: 12
+  best_iteration: 0
+artifacts:
+  config:
+  - config/env.yml
+  - config/meta.yml
+  - config/model.yml
+  data_refs:
+  - data_refs/input_data_ref.yml
+  model:
+  - artifacts/model/model_kunops.pkl
+  - artifacts/model/model_kunops.txt
+  metrics:
+  - artifacts/metrics/model_metrics.yml
+  charts:
+  - artifacts/charts/feature_importance.png
+  - artifacts/charts/roc_curve.png
+  - artifacts/charts/confusion_matrix.png
+  - artifacts/charts/learning_curve.png
+  explainability:
+  - artifacts/explainability/feature_impact_summary.png
+  reports:
+  - reports/classification_report.html

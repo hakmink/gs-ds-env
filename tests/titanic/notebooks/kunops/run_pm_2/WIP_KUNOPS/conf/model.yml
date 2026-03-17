@@ -1,0 +1,112 @@
+# ============================================================
+# model.yml - 모델 학습 설정
+#
+# 변경 주기  : 매 실험마다
+# 관리 주체  : 모델 과학자
+# S3 위치    : s3://gs-retail-awesome-conf-{region}/
+#               {env}/{user_id}/{project}/{experiment}/model.yml
+# ============================================================
+
+# ── 알고리즘 ─────────────────────────────────────────────────
+algorithm:
+  name: lightgbm
+  task: classification
+  suffix: kunops
+
+# ── 하이퍼파라미터 ───────────────────────────────────────────
+hyperparameters:
+  objective: binary
+  boosting: gbdt
+  max_depth: 6
+  learning_rate: 0.05
+  num_leaves: 31
+  feature_fraction: 0.8
+  bagging_fraction: 0.8
+  bagging_freq: 5
+  verbosity: 1
+  num_iterations: 200
+  min_data_in_leaf: 20
+  metric:
+  - auc
+  - binary_logloss
+  - binary_error
+
+# ── 데이터 설정 ──────────────────────────────────────────────
+data:
+  seed: 42
+  train_valid_split: 0.2
+  stratify: true # 클래스 불균형 고려
+
+# ── 피처 정의 ────────────────────────────────────────────────
+features:
+  index_col: PassengerId
+  target_col: Survived
+
+  # 사용할 피처
+  numeric_col:
+  - Age
+  - Fare
+  - SibSp
+  - Parch
+
+  categorical_col:
+  - Pclass
+  - Sex
+  - Embarked
+
+  # 제외할 컬럼 (고유값이 너무 많거나 정보 없음)
+  drop_col:
+  - Name
+  - Ticket
+  - Cabin # 결측률 77%
+
+# ── 전처리 ───────────────────────────────────────────────────
+preprocessing:
+  # 결측치 처리
+  missing_values:
+    Age: median # 19.9% 결측
+    Embarked: mode # 0.2% 결측
+    Fare: median
+
+  # 인코딩
+  encoding:
+    Sex: label # male=1, female=0
+    Embarked: onehot # S, C, Q
+    Pclass: ordinal # 1, 2, 3 (순서 있음)
+
+  # 스케일링
+  scaling:
+    method: standard # Age, Fare에 적용
+    columns:
+    - Age
+    - Fare
+
+# ── 피처 엔지니어링 ──────────────────────────────────────────
+feature_engineering:
+  # 파생 피처
+  derived_features:
+  - name: FamilySize
+    formula: "SibSp + Parch + 1"
+  - name: IsAlone
+    formula: "1 if FamilySize == 1 else 0"
+  - name: FarePerPerson
+    formula: "Fare / FamilySize"
+  - name: AgeGroup
+    formula: "pd.cut(Age, bins=[0,12,18,35,60,100], labels=['Child','Teen','Adult','Middle','Senior'])"
+
+# ── 클래스 가중치 ────────────────────────────────────────────
+class_weight:
+  enabled: true
+  method: balanced # 549:342 불균형 보정
+
+# ── 리포트 ───────────────────────────────────────────────────
+report:
+  type: classification_summary
+  include_sections:
+  - executive_summary
+  - data_overview
+  - model_performance
+  - confusion_matrix
+  - feature_importance
+  - roc_auc_curve
+  - recommendations

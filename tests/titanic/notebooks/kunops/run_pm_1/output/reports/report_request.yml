@@ -1,0 +1,10 @@
+include_sections:
+- executive_summary
+- data_overview
+- model_performance
+- feature_importance
+- recommendations
+report_type: model_training_summary
+requested_at: '2026-03-03T14:24:46.649310'
+requested_by: sean
+version: '1.0'

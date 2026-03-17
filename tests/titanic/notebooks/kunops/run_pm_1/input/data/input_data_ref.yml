@@ -1,0 +1,11 @@
+data_sources:
+  test:
+    format: parquet
+    rows: 10000
+  train:
+    format: parquet
+    rows: 100000
+  validation:
+    format: parquet
+    rows: 10000
+version: '1.0'
