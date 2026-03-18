@@ -30,3 +30,20 @@ mlflow:
     - lightgbm-classifier
     - titanic-kaggle
     - binary-classification
+
+# ── 노트북 동기화 ──────────────────────────────────────────
+# sync_to_conf: true → S3 conf 경로에 업로드 대상
+notebooks:
+  - name: titanic_modeling
+    local_path: modeling/titanic_modeling.ipynb   # project_root 기준 상대경로
+    sync_to_conf: true
+
+# ── SageMaker 학습 설정 ────────────────────────────────────
+sagemaker:
+  env_name:       boilerplate312
+  image_tag:      sample-v1.0
+  entry_point:    run_pm.py
+  instance_type:  ml.m5.xlarge
+  instance_count: 1
+  base_job_name:  boilerplate312-sm-sample
+  work_dir:       /opt/ml/code
