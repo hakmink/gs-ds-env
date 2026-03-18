@@ -13,7 +13,7 @@ project: titanic-survival-prediction
 experiment: kunops-v1
 model: passenger-survival-classifier
 version: v1.0
-notebook: titanic_modeling.ipynb
+notebook: titanic_modeling_mlflow.ipynb
 
 # ── 경로 조합 예시 ───────────────────────────────────────────
 # conf:  dev/sean/titanic-survival-prediction/baseline-v1/
@@ -22,9 +22,10 @@ notebook: titanic_modeling.ipynb
 
 # ── MLFlow 트래킹 ─────────────────────────────────────────────
 mlflow:
-  tracking_uri: http://mlflow.gs-retail.internal:5000
+  tracking_uri: http://edu-mlflow-alb-697692344.us-east-1.elb.amazonaws.com
   experiment_name: titanic-survival-prediction/kunops-v1
   run_name: ~
+  username: edu01
   secret_name: gs-retail-mlflow-kunops
   region_name: us-west-1
   tags:
