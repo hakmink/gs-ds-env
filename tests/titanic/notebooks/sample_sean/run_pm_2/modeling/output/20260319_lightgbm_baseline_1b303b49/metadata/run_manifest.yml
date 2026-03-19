@@ -1,0 +1,53 @@
+run_id: 20260319_lightgbm_baseline_1b303b49
+run_name: baseline-sean-v1-lightgbm-baseline
+created_at: '2026-03-19T08:12:42.919545'
+completed_at: '2026-03-19T08:12:43.194912'
+status: completed
+context:
+  env: dev
+  user_id: sample
+  project: titanic-survival-prediction
+  experiment: baseline-sean-v1
+  model: passenger-survival-classifier
+  algorithm: lightgbm
+  task: classification
+  version: v1.0
+s3_refs:
+  conf_path: s3://gs-retail-awesome-conf-us-west-2/dev/sample/titanic-survival-prediction/baseline-sean-v1/
+  data_path: s3://gs-retail-awesome-data-us-west-2/dev/sample/titanic-survival-prediction/v1.0/
+  model_path: s3://gs-retail-awesome-model-us-west-2/dev/sample/titanic-survival-prediction/baseline-sean-v1/20260319_lightgbm_baseline_1b303b49/
+config_hashes:
+  env_yml: sha256:2040d8ca7ea39b1e...
+  meta_yml: sha256:ca723caa7c59d24e...
+  model_yml: sha256:31b7b6b1123596cd...
+runtime:
+  platform: local
+  python_version: '3.12'
+  framework: lightgbm==4.6.0
+summary:
+  duration_seconds: 0
+  train_samples: 712
+  valid_samples: 179
+  feature_count: 12
+  best_iteration: 0
+artifacts:
+  config:
+  - config/env.yml
+  - config/meta.yml
+  - config/model.yml
+  data_refs:
+  - data_refs/input_data_ref.yml
+  model:
+  - artifacts/model/model_baseline.pkl
+  - artifacts/model/model_baseline.txt
+  metrics:
+  - artifacts/metrics/model_metrics.yml
+  charts:
+  - artifacts/charts/feature_importance.png
+  - artifacts/charts/roc_curve.png
+  - artifacts/charts/confusion_matrix.png
+  - artifacts/charts/learning_curve.png
+  explainability:
+  - artifacts/explainability/feature_impact_summary.png
+  reports:
+  - reports/classification_report.html

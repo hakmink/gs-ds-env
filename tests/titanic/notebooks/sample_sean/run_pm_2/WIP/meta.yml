@@ -1,0 +1,28 @@
+# ============================================================
+# meta.yml - 실험 식별자 / 트래킹 설정
+#
+# 변경 주기  : 실험 시작 시 (프로젝트·실험명 확정 시점)
+# 관리 주체  : 프로젝트 PM / 모델링 리더
+# S3 위치    : s3://gs-retail-awesome-config-ap-northeast-2/
+#               projects/gs25-sales-forecast/experiments/baseline-v1/meta.yml
+#
+# ※ 인프라 설정은 env.yml / 학습 세부 설정은 model.yml 에서 관리
+# ============================================================
+
+# ── 실험 식별자 ──────────────────────────────────────────────
+project:    gs25-sales-forecast
+experiment: baseline-v1
+model:      store-daily-sales-forecast
+version:    v1.0          # Input 데이터셋 버전 (input S3 prefix에 사용)
+
+# ── MLFlow 트래킹 ─────────────────────────────────────────────
+mlflow:
+  tracking_uri:    http://mlflow.gs-retail.internal:5000
+  experiment_name: gs25-sales-forecast/baseline-v1
+  run_name: ~                              # null이면 run_id 자동 사용
+  secret_name: gs-retail-mlflow-sean       # AWS Secrets Manager key
+  region_name: ap-northeast-2
+  tags:
+    - lightgbm-base
+    - tr2209_te2305_inf2308
+    - base
