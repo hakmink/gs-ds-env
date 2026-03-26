@@ -1,0 +1,32 @@
+# ============================================================
+# meta.yml - 실험 식별자 / 트래킹 설정
+#
+# 변경 주기  : 실험 시작 시 (프로젝트·실험명 확정 시점)
+# 관리 주체  : 프로젝트 PM / 모델링 리더
+# S3 위치    : s3://gs-retail-awesome-conf-{region}/
+#               {env}/{user_id}/{project}/{experiment}/meta.yml
+# ============================================================
+
+# ── 실험 식별자 ──────────────────────────────────────────────
+user_id:    hjsong # (수정)사용자 아이디
+project:    titanic-survival-prediction
+experiment: tuned-v1 #baseline-v1
+model:      passenger-survival-classifier
+version:    v1.0
+
+# ── 경로 조합 예시 ───────────────────────────────────────────
+# conf:  dev/sean/titanic-survival-prediction/baseline-v1/
+# data:  dev/sean/titanic-survival-prediction/v1.0/
+# model: dev/sean/titanic-survival-prediction/baseline-v1/{run_id}/
+
+# ── MLFlow 트래킹 ─────────────────────────────────────────────
+mlflow:
+  tracking_uri:    http://mlflow.gs-retail.internal:5000
+  experiment_name: titanic-survival-prediction/baseline-v1
+  run_name: ~
+  secret_name: gs-retail-mlflow-sean
+  region_name: us-east-1 # (해당하는 사람 수정) us-west-1
+  tags:
+    - lightgbm-classifier
+    - titanic-kaggle
+    - binary-classification

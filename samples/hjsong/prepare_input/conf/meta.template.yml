@@ -1,0 +1,60 @@
+# ============================================================
+# meta.template.yml - 실험 식별자 / 트래킹 설정
+#
+# 변경 주기  : 실험 시작 시 (프로젝트·실험명 확정 시점)
+# 관리 주체  : 프로젝트 PM / 모델링 리더
+#
+# ── 주입 변수 (env.yml → conf_loader.py 가 자동 주입) ──────
+#   {{ env }}          현재 환경      (예: dev / prod)
+#   {{ region }}       AWS 리전       (예: us-west-2)
+#   {{ conf_bucket }}  conf S3 버킷   (예: gs-retail-awesome-conf-us-west-2)
+#   {{ data_bucket }}  data S3 버킷
+#   {{ model_bucket }} model S3 버킷
+# ============================================================
+
+# ── 실험 식별자 ──────────────────────────────────────────────
+user_id:    {{ user_id }}   # (수정) 사용자 아이디
+project:    {{ project }}
+experiment: {{ experiment }}
+model:      {{ model }}
+version:    {{ version }}
+
+# ── 경로 조합 예시 ───────────────────────────────────────────
+# conf:  {{ env }}/sean/titanic-survival-prediction/baseline-sean-v1/
+# data:  {{ env }}/sean/titanic-survival-prediction/v1.0/
+# model: {{ env }}/sean/titanic-survival-prediction/baseline-sean-v1/{run_id}/
+
+# ── MLFlow 트래킹 ─────────────────────────────────────────────
+mlflow:
+  tracking_uri:    http://edu-mlflow-alb-697692344.us-east-1.elb.amazonaws.com
+  experiment_name: {{ model }}/{{ experiment }}
+  run_name: ~
+  username: edu05
+  secret_name: gs-retail-mlflow-{{ user_id }}
+  region_name: {{ region }}          # ← env.yml 에서 자동 주입
+  tags:
+    - lightgbm-classifier
+    - titanic-kaggle
+    - binary-classification
+
+# ── 노트북 동기화 ─────────────────────────────────────────────
+notebooks:
+  - name: modeling
+    local_path: modeling.ipynb
+    sync_to_conf: true
+
+# ── SageMaker 학습 설정 ───────────────────────────────────────
+sagemaker:
+  env_name:       {{ kernel_name }}
+  image_tag:      {{ image_tag }}
+  entry_point:    run_pm.py
+  instance_type:  ml.m5.xlarge
+  instance_count: 1
+  base_job_name:  {{ kernel_name }}-sm-{{ env }}   # ← dev / prod 자동 반영
+  work_dir:       /opt/ml/code
+
+# ── S3 버킷 참조 (env.yml 에서 자동 주입) ────────────────────
+s3:
+  conf_bucket:  {{ conf_bucket }}
+  data_bucket:  {{ data_bucket }}
+  model_bucket: {{ model_bucket }}
