@@ -24,7 +24,7 @@
 
 ### 키 구조
 
-| PK | SK | entity_type | 내용 |
+| PK(experiment_id) | SK | entity_type | 내용 |
 |----|-----|-------------|------|
 | `EXP#{user_id}#{project}#{experiment}` | `META` | experiment_meta | 실험 식별 메타 |
 | `EXP#{user_id}#{project}#{experiment}` | `CONF` | experiment_conf | env/meta/model YAML → Map |
