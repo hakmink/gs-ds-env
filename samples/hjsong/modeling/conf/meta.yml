@@ -1,32 +1,32 @@
-user_id: hjsong
-project: titanic-survival-prediction
-experiment: tuned-hjsong-v1
-model: passenger-survival-classifier
-version: v1.5
-mlflow:
-  tracking_uri: http://edu-mlflow-alb-697692344.us-east-1.elb.amazonaws.com
-  experiment_name: passenger-survival-classifier/tuned-hjsong-v1
-  run_name: null
-  username: edu05
-  secret_name: gs-retail-mlflow-hjsong
-  region_name: us-east-1
-  tags:
-  - lightgbm-classifier
-  - titanic-kaggle
-  - binary-classification
-notebooks:
-- name: modeling
-  local_path: modeling_mlflow.ipynb
-  sync_to_conf: true
 sagemaker:
   env_name: boilerplate312
+  base_job_name: boilerplate312-sm-dev
+  work_dir: /opt/ml/code
   image_tag: hjsong-v1.5
   entry_point: run_pm.py
   instance_type: ml.m5.xlarge
   instance_count: 1
-  base_job_name: boilerplate312-sm-dev
-  work_dir: /opt/ml/code
 s3:
   conf_bucket: gs-retail-awesome-conf-us-east-1
-  data_bucket: gs-retail-awesome-data-us-east-1
   model_bucket: gs-retail-awesome-model-us-east-1
+  data_bucket: gs-retail-awesome-data-us-east-1
+experiment: tuned-hjsong-v1
+user_id: hjsong
+notebooks:
+- name: modeling
+  sync_to_conf: true
+  local_path: modeling_mlflow.ipynb
+project: titanic-survival-prediction
+model: passenger-survival-classifier
+version: v1.5
+mlflow:
+  experiment_name: passenger-survival-classifier/tuned-hjsong-v1
+  secret_name: gs-retail-mlflow-hjsong
+  region_name: us-east-1
+  run_name: null
+  tracking_uri: http://edu-mlflow-alb-697692344.us-east-1.elb.amazonaws.com
+  username: edu05
+  tags:
+  - lightgbm-classifier
+  - titanic-kaggle
+  - binary-classification

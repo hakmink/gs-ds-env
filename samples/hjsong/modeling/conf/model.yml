@@ -1,56 +1,18 @@
-algorithm:
-  name: lightgbm
-  task: classification
-  suffix: baseline
-hyperparameters:
-  objective: binary
-  boosting: gbdt
-  max_depth: 6
-  learning_rate: 0.05
-  num_leaves: 31
-  feature_fraction: 0.8
-  bagging_fraction: 0.8
-  bagging_freq: 5
-  verbosity: 1
-  num_iterations: 200
-  min_data_in_leaf: 20
-  metric:
-  - auc
-  - binary_logloss
-  - binary_error
-data:
-  seed: 2026
-  train_valid_split: 0.2
-  stratify: true
 features:
   index_col: PassengerId
-  target_col: Survived
   numeric_col:
   - Age
   - Fare
   - SibSp
   - Parch
-  categorical_col:
-  - Pclass
-  - Embarked
   drop_col:
   - Name
   - Ticket
   - Cabin
-preprocessing:
-  missing_values:
-    Age: median
-    Embarked: mode
-    Fare: median
-  encoding:
-    Sex: label
-    Embarked: onehot
-    Pclass: ordinal
-  scaling:
-    method: standard
-    columns:
-    - Age
-    - Fare
+  categorical_col:
+  - Pclass
+  - Embarked
+  target_col: Survived
 feature_engineering:
   derived_features:
   - name: FamilySize
@@ -61,9 +23,27 @@ feature_engineering:
     formula: Fare / FamilySize
   - name: AgeGroup
     formula: pd.cut(Age, bins=[0,12,18,35,60,100], labels=['Child','Teen','Adult','Middle','Senior'])
+data:
+  seed: 2026
+  train_valid_split: 0.2
+  stratify: true
+preprocessing:
+  missing_values:
+    Embarked: mode
+    Age: median
+    Fare: median
+  encoding:
+    Embarked: onehot
+    Pclass: ordinal
+    Sex: label
+  scaling:
+    method: standard
+    columns:
+    - Age
+    - Fare
 class_weight:
-  enabled: true
   method: balanced
+  enabled: true
 report:
   type: classification_summary
   include_sections:
@@ -74,3 +54,23 @@ report:
   - feature_importance
   - roc_auc_curve
   - recommendations
+hyperparameters:
+  bagging_fraction: 0.8
+  bagging_freq: 5
+  boosting: gbdt
+  metric:
+  - auc
+  - binary_logloss
+  - binary_error
+  max_depth: 6
+  num_iterations: 200
+  feature_fraction: 0.8
+  num_leaves: 31
+  min_data_in_leaf: 20
+  learning_rate: 0.05
+  verbosity: 1
+  objective: binary
+algorithm:
+  name: lightgbm
+  suffix: baseline
+  task: classification
