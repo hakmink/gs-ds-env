@@ -1,0 +1,109 @@
+# ============================================================
+# model.template.yml - 모델 학습 설정
+#
+# 변경 주기  : 매 실험마다
+# 관리 주체  : 모델 과학자
+#
+# ── 주입 변수 (env.yml → conf_loader.py 가 자동 주입) ──────
+#   {{ env }}          현재 환경      (예: dev / prod)
+#   {{ region }}       AWS 리전       (예: us-west-2)
+#   {{ data_bucket }}  data S3 버킷
+# ============================================================
+
+# ── 알고리즘 ─────────────────────────────────────────────────
+algorithm:
+  name:   lightgbm
+  task:   classification
+  suffix: baseline
+
+# ── 하이퍼파라미터 ───────────────────────────────────────────
+hyperparameters:
+  objective:        binary
+  boosting:         gbdt
+  max_depth:        6
+  learning_rate:    0.05
+  num_leaves:       31
+  feature_fraction: 0.8
+  bagging_fraction: 0.8
+  bagging_freq:     5
+  verbosity:        1
+  num_iterations:   200
+  min_data_in_leaf: 20
+  metric:
+    - auc
+    - binary_logloss
+    - binary_error
+
+# ── 데이터 설정 ──────────────────────────────────────────────
+data:
+  seed:              2026
+  train_valid_split: 0.2
+  stratify:          true
+
+# ── 피처 정의 ────────────────────────────────────────────────
+features:
+  index_col:  PassengerId
+  target_col: Survived
+
+  numeric_col:
+    - Age
+    - Fare
+    - SibSp
+    # - Parch
+
+  categorical_col:
+    - Pclass
+    # - Sex
+    - Embarked
+
+  drop_col:
+    - Name
+    - Ticket
+    - Cabin           # 결측률 77%
+
+# ── 전처리 ───────────────────────────────────────────────────
+preprocessing:
+  missing_values:
+    Age:      median
+    Embarked: mode
+    Fare:     median
+
+  encoding:
+    Sex:      label
+    Embarked: onehot
+    Pclass:   ordinal
+
+  scaling:
+    method: standard
+    columns:
+      - Age
+      - Fare
+
+# ── 피처 엔지니어링 ──────────────────────────────────────────
+feature_engineering:
+  derived_features:
+    - name: FamilySize
+      formula: "SibSp + Parch + 1"
+    - name: IsAlone
+      formula: "1 if FamilySize == 1 else 0"
+    - name: FarePerPerson
+      formula: "Fare / FamilySize"
+    - name: AgeGroup
+      formula: "pd.cut(Age, bins=[0,12,18,35,60,100], labels=['Child','Teen','Adult','Middle','Senior'])"
+
+# ── 클래스 가중치 ────────────────────────────────────────────
+class_weight:
+  enabled: true
+  method:  balanced
+
+# ── 리포트 ───────────────────────────────────────────────────
+report:
+  type: classification_summary
+  include_sections:
+    - executive_summary
+    - data_overview
+    - model_performance
+    - confusion_matrix
+    - feature_importance
+    - roc_auc_curve
+    - recommendations

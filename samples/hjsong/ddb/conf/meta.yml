@@ -1,0 +1,32 @@
+sagemaker:
+  env_name: boilerplate312
+  base_job_name: boilerplate312-sm-dev
+  work_dir: /opt/ml/code
+  image_tag: hjsong-v1.5
+  entry_point: run_pm.py
+  instance_type: ml.m5.xlarge
+  instance_count: 1
+s3:
+  conf_bucket: gs-retail-awesome-conf-us-east-1
+  model_bucket: gs-retail-awesome-model-us-east-1
+  data_bucket: gs-retail-awesome-data-us-east-1
+experiment: tuned-hjsong-v2
+user_id: hjsong
+notebooks:
+- name: modeling
+  sync_to_conf: true
+  local_path: modeling_ddb.ipynb
+project: titanic-survival-prediction
+model: passenger-survival-classifier
+version: v1.5
+mlflow:
+  experiment_name: passenger-survival-classifier/tuned-hjsong-v2
+  secret_name: gs-retail-mlflow-hjsong
+  region_name: us-east-1
+  run_name: null
+  tracking_uri: http://edu-mlflow-alb-697692344.us-east-1.elb.amazonaws.com
+  username: edu05
+  tags:
+  - lightgbm-classifier
+  - titanic-kaggle
+  - binary-classification
