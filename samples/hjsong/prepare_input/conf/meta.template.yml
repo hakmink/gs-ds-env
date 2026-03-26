@@ -40,7 +40,7 @@ mlflow:
 # ── 노트북 동기화 ─────────────────────────────────────────────
 notebooks:
   - name: modeling
-    local_path: modeling.ipynb
+    local_path: modeling_mlflow.ipynb
     sync_to_conf: true
 
 # ── SageMaker 학습 설정 ───────────────────────────────────────

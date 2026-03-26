@@ -16,7 +16,7 @@ mlflow:
   - binary-classification
 notebooks:
 - name: modeling
-  local_path: modeling.ipynb
+  local_path: modeling_mlflow.ipynb
   sync_to_conf: true
 sagemaker:
   env_name: boilerplate312
