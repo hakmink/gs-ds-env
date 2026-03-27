@@ -1,1 +1,3 @@
 sagemaker_training
+seaborn
+lightgbm

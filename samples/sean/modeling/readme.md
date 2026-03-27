@@ -30,8 +30,8 @@ EDA, feature engineering, 하이퍼파라미터 튜닝 등 반복적인 실험 �
 
 ```bash
 python run_pm.py \
-  --conf-s3-path s3://gs-retail-awesome-conf-us-west-2/dev/sample/titanic-survival-prediction/baseline-sean-v1/ \
-  --notebook-path ./modeling.ipynb
+  --conf-s3-path s3://gs-retail-awesome-conf-us-west-2/dev/sample/titanic-survival-prediction/baseline-awesome-sean-v1/ \
+  --notebook-path s3://gs-retail-awesome-conf-us-west-2/dev/sample/titanic-survival-prediction/baseline-awesome-sean-v1/modeling.ipynb
 ```
 
 이 테스트가 통과되면 Docker 이미지를 SageMaker estimator에 연결했을 때도 동일하게 동작하는 것을 보장합니다.

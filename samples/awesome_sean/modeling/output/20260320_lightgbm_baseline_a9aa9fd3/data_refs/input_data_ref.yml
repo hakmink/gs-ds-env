@@ -1,0 +1,58 @@
+source:
+  type: local
+  path: /home/ec2-user/SageMaker/gs-ds-env/samples/awesome_sean/modeling/data
+  version: v1.0
+files:
+  data:
+  - path: data/train.csv
+    size_bytes: 61194
+    row_count: 891
+    checksum: sha256:7d118fef8b6ccf7f...
+schema:
+  index_col: PassengerId
+  target_col: Survived
+  feature_count: 12
+split:
+  method: stratified_random
+  train_ratio: 0.8
+  valid_ratio: 0.2
+  seed: 2026
+  train:
+    samples: 712
+    target_distribution:
+      0: !!python/object/apply:numpy._core.multiarray.scalar
+      - &id001 !!python/object/apply:numpy.dtype
+        args:
+        - i8
+        - false
+        - true
+        state: !!python/tuple
+        - 3
+        - <
+        - null
+        - null
+        - null
+        - -1
+        - -1
+        - 0
+      - !!binary |
+        twEAAAAAAAA=
+      1: !!python/object/apply:numpy._core.multiarray.scalar
+      - *id001
+      - !!binary |
+        EQEAAAAAAAA=
+  valid:
+    samples: 179
+    target_distribution:
+      0: !!python/object/apply:numpy._core.multiarray.scalar
+      - *id001
+      - !!binary |
+        bgAAAAAAAAA=
+      1: !!python/object/apply:numpy._core.multiarray.scalar
+      - *id001
+      - !!binary |
+        RQAAAAAAAAA=
+quality:
+  total_rows: 891
+  total_columns: 12
+  used_features: 12

@@ -1,5 +1,5 @@
 # Dockerfile
-FROM 155954279556.dkr.ecr.us-east-1.amazonaws.com/gs-automl-base-containers/boilerplate312:sean-base
+FROM 155954279556.dkr.ecr.us-west-2.amazonaws.com/gs-automl-base-containers/boilerplate312:sean-base
 
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
@@ -13,7 +13,7 @@ RUN mkdir -p /opt/ml/code/
 WORKDIR /opt/ml/
 
 # 필요한 파일 복사
-COPY run_pm.py run_pm_utils.py conf.py /opt/ml/code/
+COPY run_pm.py /opt/ml/code/
 
 # 필요한 패키지 설치 (예: requirements.txt가 있을 경우)
 COPY requirements.txt /opt/ml/

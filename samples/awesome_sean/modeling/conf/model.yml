@@ -1,0 +1,77 @@
+algorithm:
+  name: lightgbm
+  task: classification
+  suffix: baseline
+hyperparameters:
+  objective: binary
+  boosting: gbdt
+  max_depth: 6
+  learning_rate: 0.05
+  num_leaves: 31
+  feature_fraction: 0.8
+  bagging_fraction: 0.8
+  bagging_freq: 5
+  verbosity: 1
+  num_iterations: 200
+  min_data_in_leaf: 20
+  metric:
+  - auc
+  - binary_logloss
+  - binary_error
+data:
+  seed: 2026
+  train_valid_split: 0.2
+  stratify: true
+features:
+  index_col: PassengerId
+  target_col: Survived
+  numeric_col:
+  - Age
+  - Fare
+  - SibSp
+  - Parch 
+  categorical_col:
+  - Pclass
+  # - Sex
+  - Embarked
+  drop_col:
+  - Name
+  - Ticket
+  - Cabin
+preprocessing:
+  missing_values:
+    Age: median
+    Embarked: mode
+    Fare: median
+  encoding:
+    Sex: label
+    Embarked: onehot
+    Pclass: ordinal
+  scaling:
+    method: standard
+    columns:
+    - Age
+    - Fare
+feature_engineering:
+  derived_features:
+  - name: FamilySize
+    formula: SibSp + Parch + 1
+  - name: IsAlone
+    formula: 1 if FamilySize == 1 else 0
+  - name: FarePerPerson
+    formula: Fare / FamilySize
+  - name: AgeGroup
+    formula: pd.cut(Age, bins=[0,12,18,35,60,100], labels=['Child','Teen','Adult','Middle','Senior'])
+class_weight:
+  enabled: true
+  method: balanced
+report:
+  type: classification_summary
+  include_sections:
+  - executive_summary
+  - data_overview
+  - model_performance
+  - confusion_matrix
+  - feature_importance
+  - roc_auc_curve
+  - recommendations

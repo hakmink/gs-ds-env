@@ -1,0 +1,31 @@
+user_id: sample
+project: titanic-survival-prediction
+experiment: baseline-awesome-sean-v1
+model: passenger-survival-classifier
+version: v1.0
+mlflow:
+  tracking_uri: http://mlflow.gs-retail.internal:5000
+  experiment_name: passenger-survival-classifier/baseline-awesome-sean-v1
+  run_name: null
+  secret_name: gs-retail-mlflow-sean
+  region_name: us-west-2
+  tags:
+  - lightgbm-classifier
+  - titanic-kaggle
+  - binary-classification
+notebooks:
+- name: modeling
+  local_path: modeling/modeling.ipynb
+  sync_to_conf: true
+sagemaker:
+  env_name: boilerplate312
+  image_tag: sean-v2.0
+  entry_point: run_pm.py
+  instance_type: ml.m5.xlarge
+  instance_count: 1
+  base_job_name: boilerplate312-sm-dev
+  work_dir: /opt/ml/code
+s3:
+  conf_bucket: gs-retail-awesome-conf-us-west-2
+  data_bucket: gs-retail-awesome-data-us-west-2
+  model_bucket: gs-retail-awesome-model-us-west-2
