@@ -1,0 +1,66 @@
+algorithm:
+  name: lightgbm
+  task: regression
+  suffix: baseline
+
+hyperparameters:
+  objective: regression_l2
+  boosting: gbdt
+  max_depth: 6
+  learning_rate: 0.05
+  num_leaves: 31
+  feature_fraction: 0.8
+  bagging_fraction: 0.8
+  bagging_freq: 5
+  verbosity: -1
+  num_iterations: 300
+  min_data_in_leaf: 20
+  metric:
+    - rmse
+
+data:
+  seed: 2026
+  val_cutoff_ratio: 0.2   # 시간 기준 마지막 20%를 validation으로 사용
+  target_col: count
+  log_transform: true   # log1p(count)으로 학습 → RMSLE 직접 최적화
+  drop_col:
+    - casual             # test에 없는 컬럼
+    - registered         # test에 없는 컬럼
+
+features:
+  index_col: datetime
+  target_col: count
+  numeric_col:
+    - temp
+    - atemp
+    - humidity
+    - windspeed
+  categorical_col:
+    - season
+    - holiday
+    - workingday
+    - weather
+  datetime_col: datetime
+  derived_features:
+    - hour
+    - day
+    - month
+    - year
+    - weekday
+    - is_rush_hour    # (7<=hour<=9) or (17<=hour<=19)
+    - is_weekend
+
+preprocessing:
+  missing_values: {}
+  scaling:
+    method: none   # LightGBM은 스케일링 불필요
+
+report:
+  type: regression_summary
+  include_sections:
+    - executive_summary
+    - data_overview
+    - model_performance
+    - feature_importance
+    - residual_plot
+    - predictions_vs_actual

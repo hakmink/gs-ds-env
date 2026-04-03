@@ -1,0 +1,32 @@
+user_id: hjsong
+project: bike-sharing-demand
+experiment: baseline-lgbm-v1
+model: bike-count-regressor
+version: v1.0
+mlflow:
+  tracking_uri: http://edu-mlflow-alb-697692344.us-east-1.elb.amazonaws.com
+  experiment_name: bike-count-regressor/baseline-lgbm-v1
+  run_name: null
+  username: edu05
+  secret_name: gs-retail-mlflow-hjsong
+  region_name: us-east-1
+  tags:
+    - lightgbm-regressor
+    - bike-sharing-kaggle
+    - regression
+notebooks:
+  - name: modeling
+    local_path: modeling.ipynb
+    sync_to_conf: true
+sagemaker:
+  env_name: boilerplate312
+  image_tag: hjsong-bike-v1.0
+  entry_point: run_pm.py
+  instance_type: ml.m5.xlarge
+  instance_count: 1
+  base_job_name: boilerplate312-bike-dev
+  work_dir: /opt/ml/code
+s3:
+  conf_bucket: gs-retail-awesome-conf-us-east-1
+  data_bucket: gs-retail-awesome-data-us-east-1
+  model_bucket: gs-retail-awesome-model-us-east-1
